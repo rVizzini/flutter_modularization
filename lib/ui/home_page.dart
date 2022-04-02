@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modularization/ui/detail_page.dart';
 import 'package:flutter_modularization/widget/card_list_movie.dart';
 import 'package:flutter_modularization/widget/chip_genre_movie.dart';
+import 'package:flutter_modularization/ui/test_page.dart';
 
 import 'package:network/network.dart';
 import 'package:bloc/bloc.dart';
@@ -43,10 +44,24 @@ class _HomePageState extends State<HomePage> {
           color: Color.fromRGBO(58, 66, 86, 1.0)
         ),),
       ),
-      body: getListMovie(),
+      body: getListMovie()
     );
   }
-
+  getButton(){
+    return TextButton (
+      child: Text(
+        "goToTestButton"
+      ),
+      onPressed: () {
+        Navigator.push(
+          context, 
+          MaterialPageRoute(builder: (context) {
+          return BooksApp();
+        })
+        );
+      },
+    );
+  }
   getListMovie() {
     return Container(
       child: Center(
@@ -69,9 +84,10 @@ class _HomePageState extends State<HomePage> {
 
   Widget showListMovie(AsyncSnapshot<Movie> snapshot) =>
       ListView.builder(
-        itemCount: snapshot == null ? 0 : snapshot.data.results.length,
+        itemCount: snapshot == null ? 1 : (snapshot.data.results.length+1),
         itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
+          (index > snapshot.data.results.length) ?
+           GestureDetector(
             child: CardListMovies(
               image: 'https://image.tmdb.org/t/p/w185${snapshot.data.results[index].posterPath}',
               title: snapshot.data.results[index].title,
@@ -98,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             },
-          );
+          ) : getButton();
         },
       );
 }
