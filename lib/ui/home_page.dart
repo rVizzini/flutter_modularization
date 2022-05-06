@@ -1,24 +1,21 @@
-
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modularization/ui/detail_page.dart';
+import 'package:flutter_modularization/ui/other_options_page.dart';
 import 'package:flutter_modularization/widget/card_list_movie.dart';
 import 'package:flutter_modularization/widget/chip_genre_movie.dart';
-import 'package:flutter_modularization/ui/test_page.dart';
-
 import 'package:network/network.dart';
-import 'package:bloc/bloc.dart';
 
 class HomePage extends StatefulWidget {
-
   final String title;
-  const HomePage({Key key, this.title}) : super(key: key);
+
+  const HomePage({Key? key, required this.title}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   final bloc = MovieListBloc();
 
   @override
@@ -38,30 +35,18 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(widget.title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Color.fromRGBO(58, 66, 86, 1.0)
-        ),),
+        backgroundColor: Colors.white,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(58, 66, 86, 1.0)),
+        ),
       ),
-      body: getListMovie()
+      body: getListMovie(),
     );
   }
-  getButton(){
-    return TextButton (
-      child: Text(
-        "goToTestButton"
-      ),
-      onPressed: () {
-        Navigator.push(
-          context, 
-          MaterialPageRoute(builder: (context) {
-          return BooksApp();
-        })
-        );
-      },
-    );
-  }
+
   getListMovie() {
     return Container(
       child: Center(
@@ -71,50 +56,74 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               return showListMovie(snapshot);
             } else if (snapshot.hasError) {
-              return Text(snapshot.error.toString(), style: TextStyle(color: Color.fromRGBO(58, 66, 86, 1.0)),);
+              return Text(
+                snapshot.error.toString(),
+                style: TextStyle(color: Color.fromRGBO(58, 66, 86, 1.0)),
+              );
             }
             return Center(
                 child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(58, 66, 86, 1.0))));
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Color.fromRGBO(58, 66, 86, 1.0))));
           },
         ),
       ),
     );
   }
+  int addOne(value) {
+    return value +1;
+  }
+  int setValue(value) {
+    int val=0;
+    value == null? null : val = value+1;
+    return value;
+  }
 
-  Widget showListMovie(AsyncSnapshot<Movie> snapshot) =>
-      ListView.builder(
-        itemCount: snapshot == null ? 1 : (snapshot.data.results.length+1),
+  Widget showListMovie(AsyncSnapshot<Movie> snapshot) => ListView.builder(
+        itemCount: snapshot.data == null ? 0 : addOne(snapshot.data?.results.length),
         itemBuilder: (BuildContext context, int index) {
-          (index > snapshot.data.results.length) ?
-           GestureDetector(
+          final movie = snapshot.data!.results[index];
+          return index == setValue(snapshot.data?.results.length)? GestureDetector(
             child: CardListMovies(
-              image: 'https://image.tmdb.org/t/p/w185${snapshot.data.results[index].posterPath}',
-              title: snapshot.data.results[index].title,
-              vote: snapshot.data.results[index].voteAverage,
-              releaseDate: snapshot.data.results[index].releaseDate,
-              overview: snapshot.data.results[index].overview,
-              genre: snapshot.data.results[index].genreIds.take(3).map(buildGenreChip).toList(),
+              image: 'https://image.tmdb.org/t/p/w185${movie.posterPath}',
+              title: movie.title,
+              vote: movie.voteAverage.toString(),
+              releaseDate: movie.releaseDate,
+              overview: movie.overview,
+              genre: movie.genreIds.take(3).map(buildGenreChip).toList(),
             ),
             onTap: () {
               Navigator.push(
                 context,
                 PageRouteBuilder(
-                  transitionDuration: Duration(milliseconds: 777),
-                  pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-                    return DetailPage(
-                      title: snapshot.data.results[index].title,
-                      imagePoster: 'https://image.tmdb.org/t/p/w185${snapshot.data.results[index].posterPath}',
-                      rating: double.parse(snapshot.data.results[index].voteAverage),
-                      imageBanner: 'https://image.tmdb.org/t/p/original${snapshot.data.results[index].backdropPath}',
-                      genre: snapshot.data.results[index].genreIds.take(3).map(buildGenreChip).toList(),
-                      overview: snapshot.data.results[index].overview,
-                    );
-                  }
-                ),
+                    transitionDuration: Duration(milliseconds: 777),
+                    pageBuilder: (
+                        BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation) {
+                      return DetailPage(
+                        title: movie.title,
+                        imagePoster:
+                            'https://image.tmdb.org/t/p/w185${movie.posterPath}',
+                        rating: movie.voteAverage,
+                        imageBanner:
+                            'https://image.tmdb.org/t/p/original${movie.backdropPath}',
+                        genre:
+                            movie.genreIds.take(3).map(buildGenreChip).toList(),
+                        overview: movie.overview,
+                      );
+                    }),
               );
             },
-          ) : getButton();
+          ) : ElevatedButton(
+            style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const OtherOptionsPage()));
+            },
+            child: const Text('Enabled'),
+          );
         },
       );
 }

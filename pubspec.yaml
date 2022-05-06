@@ -12,27 +12,28 @@ description: A new Flutter application.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+1
+publish_to: 'none'
 
 environment:
-  sdk: ">=2.10.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  cached_network_image: ^2.0.0-rc
+  cached_network_image: ^3.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^1.0.4
 
   # This is our modular form git
   network:
     git:
-      url: https://https://github.com/rVizzini/network_module
+      url: https://github.com/rVizzini/network_module.git
 
   bloc:
     git:
-      url: https://https://github.com/rVizzini/bloc_module
+      url: https://github.com/rVizzini/bloc_module.git
 
 dev_dependencies:
   flutter_test:
@@ -80,4 +81,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-  

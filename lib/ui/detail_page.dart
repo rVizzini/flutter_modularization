@@ -11,37 +11,45 @@ class DetailPage extends StatelessWidget {
   final double rating;
   final String overview;
 
-  const DetailPage({Key key, this.genre, this.title, this.imageBanner, this.imagePoster, this.rating, this.overview}) : super(key: key);
+  const DetailPage({
+    Key? key,
+    required this.genre,
+    required this.title,
+    required this.imageBanner,
+    required this.imagePoster,
+    required this.rating,
+    required this.overview,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Stack(
-          children: <Widget>[
-            Column(
-              children: [
-                MovieDetailHeader(
-                  title: title,
-                  imageBanner: imageBanner,
-                  imagePoster: imagePoster,
-                  rating: rating,
-                  genre: genre,
+          child: Stack(
+            children: <Widget>[
+              Column(
+                children: [
+                  MovieDetailHeader(
+                      title: title,
+                      imageBanner: imageBanner,
+                      imagePoster: imagePoster,
+                      rating: rating,
+                      genre: genre,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Storyline(overview),
+                    ),
+                    SizedBox(height: 50.0),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Storyline(overview),
-                ),
-                SizedBox(height: 50.0),
-              ],
-            ),
-            Positioned(
-              top: 20,
-              left: 5,
-              child: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
-            ),
-          ],
+              Positioned(
+                top: 20,
+                left: 5,
+                child: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
+              ),
+            ],
         )
       ),
     );
